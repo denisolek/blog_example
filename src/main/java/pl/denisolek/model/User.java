@@ -1,10 +1,11 @@
 package pl.denisolek.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.ColumnDefault;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,26 +17,28 @@ public class User {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "display_name", unique = true)
     private String displayName;
 
-    @Column(name = "role", nullable = false)
+    @Column(nullable = false)
     private String role = "USER";
 
-    @Column(name = "description")
     private String description = "";
 
-    @Column(name = "created_at")
     private Date created_at = new Date();
 
-    @Column(name = "updated_at")
     private Date updated_at = new Date();
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Post> posts;
+
 
     public User() {
     }
@@ -43,6 +46,12 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User(String username, String password, String displayName) {
+        this.username = username;
+        this.password = password;
+        this.displayName = displayName;
     }
 
     public long getId() {
@@ -107,5 +116,13 @@ public class User {
 
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }

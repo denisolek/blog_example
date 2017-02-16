@@ -2,7 +2,6 @@ package pl.denisolek.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.denisolek.exceptions.UserNotFoundException;
 import pl.denisolek.model.User;
@@ -14,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 @RestController(value = "users")
-@RequestMapping(value = "/api/users")
 public class UserController {
     private UserRepository userRepository;
 
@@ -23,18 +21,19 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/api/users", method = RequestMethod.GET)
     public List<User> findAllUsers() {
+        System.out.println(userRepository.findAll());
         return userRepository.findAll();
     }
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/api/users/{id}",method = RequestMethod.GET)
     public User findUser(@PathVariable("id") long id) {
         this.validateUser(id);
         return  userRepository.findOne(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/api/users", method = RequestMethod.POST, headers = "Accept=application/json")
     public void addUser(@RequestBody AddUserRequest addUserRequest) {
         User user = new User();
         user.setUsername(addUserRequest.getUsername());
@@ -43,7 +42,7 @@ public class UserController {
         userRepository.save(user);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    @RequestMapping(value = "/api/users/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public void updateUser(@PathVariable("id") long id, @RequestBody UpdateUserRequest updateUserRequest) {
         this.validateUser(id);
         User user = userRepository.findOne(id);
@@ -56,7 +55,7 @@ public class UserController {
         userRepository.save(user);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable("id") long id) {
         this.validateUser(id);
         userRepository.delete(id);
