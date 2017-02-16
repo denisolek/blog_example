@@ -16,10 +16,10 @@ public class User {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "display_name", unique = true)
@@ -33,6 +33,17 @@ public class User {
 
     @Column(name = "created_at")
     private Date created_at = new Date();
+
+    @Column(name = "updated_at")
+    private Date updated_at = new Date();
+
+    public User() {
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public long getId() {
         return id;
@@ -88,5 +99,13 @@ public class User {
 
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
+    }
+
+    public Date getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
     }
 }
