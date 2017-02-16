@@ -2,7 +2,9 @@ package pl.denisolek.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.denisolek.exceptions.UserNotFoundException;
 import pl.denisolek.model.User;
 import pl.denisolek.model.request.AddUserRequest;
 import pl.denisolek.model.request.UpdateUserRequest;
@@ -28,6 +30,7 @@ public class UserController {
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public User findUser(@PathVariable("id") long id) {
+        this.validateUser(id);
         return  userRepository.findOne(id);
     }
 
@@ -42,6 +45,7 @@ public class UserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     public void updateUser(@PathVariable("id") long id, @RequestBody UpdateUserRequest updateUserRequest) {
+        this.validateUser(id);
         User user = userRepository.findOne(id);
 
         user.setPassword(updateUserRequest.getPassword());
@@ -54,6 +58,13 @@ public class UserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable("id") long id) {
+        this.validateUser(id);
         userRepository.delete(id);
+    }
+
+    private void validateUser(long id) {
+        if (this.userRepository.findOne(id) == null) {
+            throw new UserNotFoundException(id);
+        }
     }
 }
