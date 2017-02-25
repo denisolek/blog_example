@@ -43,9 +43,6 @@ public class User {
     private List<Post> posts;
 
 
-    public User() {
-    }
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -55,6 +52,13 @@ public class User {
         this.username = username;
         this.password = password;
         this.displayName = displayName;
+    }
+
+    public User() {
+
+    }
+
+    public User(User user) {
     }
 
     public long getId() {
